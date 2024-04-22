@@ -1,17 +1,22 @@
+"""Создание моделей"""
+
 import sqlalchemy as sq
 from sqlalchemy.orm import DeclarativeBase, registry, relationship
 
 reg = registry()
 
 class Base(DeclarativeBase):
+    """Декларативный базовый класс"""
     registry = reg
 
 class Publisher(Base):
+    """Создает модель Publisher"""
     __tablename__ = 'publisher'
     id = sq.Column(sq.Integer, primary_key=True)
     name = sq.Column(sq.String(length=150), unique=True)
 
 class Book(Base):
+    """Создает модель Book"""
     __tablename__ = 'book'
     id = sq.Column(sq.Integer, primary_key=True)
     title = sq.Column(sq.String(length=200), nullable=False)
@@ -20,11 +25,13 @@ class Book(Base):
     publishers = relationship(Publisher, backref='book')
 
 class Shop(Base):
+    """Создает модель Shop"""
     __tablename__ = 'shop'
     id = sq.Column(sq.Integer, primary_key=True)
     title = sq.Column(sq.String(length=200), nullable=False)
 
 class Stock(Base):
+    """Создает модель Stock"""
     __tablename__ = 'stock'
     id = sq.Column(sq.Integer, primary_key=True)
     count = sq.Column(sq.Integer)
@@ -35,6 +42,7 @@ class Stock(Base):
     shops = relationship(Shop, backref='stock')
 
 class Sale(Base):
+    """Создает модель Sale"""
     __tablename__ = 'sale'
     id = sq.Column(sq.Integer, primary_key=True)
     price = sq.Column(sq.Float, nullable=False)
@@ -45,4 +53,5 @@ class Sale(Base):
     stocks = relationship(Stock, backref='sale')
 
 def create_tables(engine):
+    """Функция, отвечающая за создание таблиц в БД"""
     Base.metadata.create_all(engine)

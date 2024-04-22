@@ -1,10 +1,14 @@
+"""Подключается к БД к PostgreSQL,
+импортирует модели данных из models,
+заполняет БД тестовыми данными"""
+
 import json
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
 from models import create_tables, Publisher, Shop, Book, Stock, Sale
 
-DSN = 'postgresql+psycopg2://postgres:********@localhost:5432/publisherdb'
+DSN = 'postgresql+psycopg2://postgres:*********@localhost:5432/publisherdb'
 engine = sqlalchemy.create_engine(DSN)
 create_tables(engine)
 
@@ -23,4 +27,28 @@ for i in tests_data:
         'sale': Sale,
     }[i.get('model')]
     session.add(model(id=i.get('pk'), **i.get('fields')))
+
+def publisher_id(session):
+    """Принимает id издателя"""
+    enter = input('Enter the publisher id: ')
+    q = session.query(Publisher).filter(Publisher.id == enter)
+    for i in q.all():
+        return f'Publisher id {enter} -> {i.name}'
+
+def publisher_name(session):
+    """Принимает имя издателя"""
+    enter = input('Enter the name publisher: ')
+    q = session.query(Publisher).filter(Publisher.name == enter)
+    for i in q.all():
+        return f'Name publisher {enter} -> id {i.id}'
+
+def shop_by_publisher_name(session):
+    """Принимает имя издателя и
+    выводит в каком магазине была продана книга"""
+    enter = input('Enter the name publisher: ')
+    q = session.query(Shop).join(Stock).join(Book).join(
+        Publisher).filter(Publisher.name == enter)
+    for i in q.all():
+        return i
+
 session.commit()
