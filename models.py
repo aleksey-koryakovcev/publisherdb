@@ -1,13 +1,10 @@
 """Создание моделей"""
 
 import sqlalchemy as sq
-from sqlalchemy.orm import DeclarativeBase, registry, relationship
-
-reg = registry()
+from sqlalchemy.orm import DeclarativeBase, relationship
 
 class Base(DeclarativeBase):
     """Декларативный базовый класс"""
-    registry = reg
 
 class Publisher(Base):
     """Создает модель Publisher"""
@@ -28,15 +25,15 @@ class Shop(Base):
     """Создает модель Shop"""
     __tablename__ = 'shop'
     id = sq.Column(sq.Integer, primary_key=True)
-    title = sq.Column(sq.String(length=200), nullable=False)
+    name = sq.Column(sq.String(length=40), unique=True)
 
 class Stock(Base):
     """Создает модель Stock"""
     __tablename__ = 'stock'
     id = sq.Column(sq.Integer, primary_key=True)
-    count = sq.Column(sq.Integer)
     id_book = sq.Column(sq.Integer, sq.ForeignKey('book.id'), nullable=False)
     id_shop = sq.Column(sq.Integer, sq.ForeignKey('shop.id'), nullable=False)
+    count = sq.Column(sq.Integer)
 
     books = relationship(Book, backref='stock')
     shops = relationship(Shop, backref='stock')

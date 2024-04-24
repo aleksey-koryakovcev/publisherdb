@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 from models import create_tables, Publisher, Shop, Book, Stock, Sale
 
-DSN = 'postgresql+psycopg2://postgres:*********@localhost:5432/publisherdb'
+DSN = 'postgresql+psycopg2://postgres:aleksey_k@localhost:5432/publisherdb'
 engine = sqlalchemy.create_engine(DSN)
 create_tables(engine)
 
@@ -52,3 +52,8 @@ def shop_by_publisher_name(session):
         return i
 
 session.commit()
+
+if __name__ == '__main__':
+    publisher_id(session)
+    publisher_name(session)
+    shop_by_publisher_name(session)
